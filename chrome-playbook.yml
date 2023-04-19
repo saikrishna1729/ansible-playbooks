@@ -1,0 +1,19 @@
+---
+- name: Update Google Chrome
+  hosts: windows
+  tasks:
+    - name: Kill the Chrome process
+      win_shell: Stop-Process -Name Chrome -Force -ErrorAction "silentlycontinue"
+      ignore_errors: true
+    - name: Copy installer
+      win_copy:
+        src: /home/sai/lab/googlechromestandaloneenterprise64.msi
+        dest: C:\googlechromestandaloneenterprise64.msi
+    - name: Install Chrome
+      win_package:
+        path: C:\googlechromestandaloneenterprise64.msi
+        arguments: /qn /L*V "C:\Install_Test"
+        state: present
+      become: yes
+      become_user: ansible
+      become_method: runas
